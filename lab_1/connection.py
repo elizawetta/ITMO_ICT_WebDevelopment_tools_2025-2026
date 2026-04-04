@@ -1,13 +1,16 @@
 from sqlmodel import SQLModel, Session, create_engine
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
+import os
+from dotenv import load_dotenv
 
-DB_USER = "postgres"
-DB_PASS = "db"
-DB_HOST = "localhost"
-DB_NAME = "trips"
+load_dotenv()
+DB_USER = os.getenv("DB_USER", "postgres")
+DB_PASS = os.getenv("DB_PASS","db")
+DB_HOST = os.getenv("DB_HOST", "localhost")
+DB_NAME = os.getenv("DB_NAME", "trips")
 
-db_url = f'postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}'
+db_url = f'postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}'
 engine = create_engine(db_url, echo=True)
 
 def create_database():

@@ -53,6 +53,7 @@ class UserDefault(SQLModel):
     username: str
     birth_date: datetime.date
     description: Optional[str]
+    experience: int | None
     profession_id: Optional[int] = Field(default=None, foreign_key="profession.id")
 
 
