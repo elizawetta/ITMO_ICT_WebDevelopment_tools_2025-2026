@@ -1,0 +1,3 @@
+sqlmodel
+fastapi
+psycopg2-binary
