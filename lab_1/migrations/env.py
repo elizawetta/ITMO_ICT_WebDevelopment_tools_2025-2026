@@ -2,12 +2,13 @@ from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
-
+from sqlalchemy import create_engine
 from alembic import context
 from models import *
 from sqlmodel import SQLModel
 from dotenv import load_dotenv
 import os
+
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -18,6 +19,7 @@ DB_USER = os.getenv("DB_USER", "postgres")
 DB_PASS = os.getenv("DB_PASS", "db")
 DB_HOST = os.getenv("DB_HOST", "localhost")
 DB_NAME = os.getenv("DB_NAME", "trips")
+
 
 db_url = f"postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}"
 
@@ -62,8 +64,12 @@ def run_migrations_offline() -> None:
         dialect_opts={"paramstyle": "named"},
     )
 
+
+
     with context.begin_transaction():
         context.run_migrations()
+
+
 
 
 def run_migrations_online() -> None:
@@ -73,15 +79,15 @@ def run_migrations_online() -> None:
     and associate a connection with the context.
 
     """
-    connectable = engine_from_config(
-        config.get_section(config.config_ini_section, {}),
-        prefix="sqlalchemy.",
+    connectable = create_engine(
+        db_url,
         poolclass=pool.NullPool,
     )
 
     with connectable.connect() as connection:
         context.configure(
-            connection=connection, target_metadata=target_metadata
+            connection=connection,
+            target_metadata=target_metadata
         )
 
         with context.begin_transaction():

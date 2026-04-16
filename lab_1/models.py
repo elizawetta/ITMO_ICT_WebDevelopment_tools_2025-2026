@@ -1,19 +1,17 @@
-import datetime
 from typing import Optional, List
-
-from pydantic import BaseModel
-from typing_extensions import TypedDict
+import datetime
 from sqlmodel import SQLModel, Field, Relationship
 
 
 class TripUserLink(SQLModel, table=True):
-    trip_id: Optional[int] = Field(default=None, foreign_key="trip.id", primary_key=True)
-    user_id: Optional[int] = Field(default=None, foreign_key="user.id", primary_key=True)
+    trip_id: int = Field(default=None, foreign_key="trip.id", primary_key=True)
+    user_id: int = Field(default=None, foreign_key="user.id", primary_key=True)
+    role: str = Field(default="passenger")
 
 
 class SkillUserLink(SQLModel, table=True):
-    skill_id: Optional[int] = Field(default=None, foreign_key="skill.id", primary_key=True)
-    user_id: Optional[int] = Field(default=None, foreign_key="user.id", primary_key=True)
+    skill_id: int = Field(default=None, foreign_key="skill.id", primary_key=True)
+    user_id: int = Field(default=None, foreign_key="user.id", primary_key=True)
 
 
 class TripDefault(SQLModel):
@@ -26,6 +24,8 @@ class TripDefault(SQLModel):
 
 class Trip(TripDefault, table=True):
     id: int = Field(default=None, primary_key=True)
+    creator_id: int = Field(foreign_key="user.id")
+    creator: "User" = Relationship(back_populates="created_trips")
     users: Optional[List["User"]] = Relationship(back_populates="trips", link_model=TripUserLink)
 
 
@@ -55,16 +55,19 @@ class UserDefault(SQLModel):
     description: Optional[str]
     experience: int | None
     profession_id: Optional[int] = Field(default=None, foreign_key="profession.id")
+    project_preferences: Optional[str] | None
 
 
 class User(UserDefault, table=True):
     id: int = Field(default=None, primary_key=True)
+    hashed_password: str
     profession: Optional[Profession] = Relationship(back_populates="users_prof")
     skills: Optional[List[Skill]] = Relationship(
         back_populates="users",
         link_model=SkillUserLink)
     trips: Optional[List[Trip]] = Relationship(
         back_populates="users", link_model=TripUserLink)
+    created_trips: List["Trip"] = Relationship(back_populates="creator")
 
 
 class UserFull(UserDefault):
@@ -77,29 +80,5 @@ class UserSkills(UserDefault):
     skills: Optional[List[Skill]] = None
 
 
-class AddSkillsRequest(BaseModel):
-    skill_ids: List[int]
 
 
-class AddTripRequest(BaseModel):
-    trip_ids: List[int]
-
-
-class ProfessionCreateResponse(TypedDict):
-    status: int
-    data: Profession
-
-
-class UserCreateResponse(TypedDict):
-    status: int
-    data: User
-
-
-class SkillCreateResponse(TypedDict):
-    status: int
-    data: Skill
-
-
-class TripCreateResponse(TypedDict):
-    status: int
-    data: Trip

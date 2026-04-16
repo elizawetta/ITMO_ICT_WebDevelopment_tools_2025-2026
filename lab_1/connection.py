@@ -11,7 +11,7 @@ DB_HOST = os.getenv("DB_HOST", "localhost")
 DB_NAME = os.getenv("DB_NAME", "trips")
 
 db_url = f'postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}'
-engine = create_engine(db_url, echo=True)
+engine = create_engine(db_url)
 
 def create_database():
     conn = psycopg2.connect(
