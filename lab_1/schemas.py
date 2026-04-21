@@ -53,3 +53,12 @@ class ChangePasswordRequest(pydantic.BaseModel):
     old_password: str
     new_password: str = Field(..., min_length=8)
     confirm_password: str
+
+
+class UserUpdate(SQLModel):
+    username: Optional[str] = None
+    birth_date: Optional[datetime.date] = None
+    description: Optional[str] = None
+    experience: Optional[int] = None
+    profession_id: Optional[int] = None
+    project_preferences: Optional[str] = None

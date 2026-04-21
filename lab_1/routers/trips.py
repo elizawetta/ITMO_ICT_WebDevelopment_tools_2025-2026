@@ -14,6 +14,24 @@ router = APIRouter()
 def trips_list(session=Depends(get_session)) -> List[Trip]:
     return session.exec(select(Trip)).all()
 
+@router.get("/search", response_model=List[Trip])
+def search_trips(departure: Optional[str] = Query(None),
+                 arrival: Optional[str] = Query(None),
+                 start_date: Optional[datetime.date] = Query(None),
+                 end_date: Optional[datetime.date] = Query(None),
+                 db: Session = Depends(get_session)) -> List[Trip]:
+    statement = select(Trip)
+    if departure:
+        statement = statement.where(Trip.departure_place == departure)
+    if arrival:
+        statement = statement.where(Trip.arrival_place == arrival)
+    if start_date:
+        statement = statement.where(Trip.start_date == start_date)
+    if end_date:
+        statement = statement.where(Trip.end_date == end_date)
+
+    results = db.exec(statement).all()
+    return results
 
 @router.get("/{trip_id}")
 def trip_get(trip_id: int,
@@ -66,24 +84,7 @@ def trip_update(trip_id: int,
     return db_trip
 
 
-@router.get("/search", response_model=List[Trip])
-def search_trips(departure: Optional[str] = Query(None),
-                 arrival: Optional[str] = Query(None),
-                 start_date: Optional[datetime.date] = Query(None),
-                 end_date: Optional[datetime.date] = Query(None),
-                 db: Session = Depends(get_session)) -> List[Trip]:
-    statement = select(Trip)
-    if departure:
-        statement = statement.where(Trip.departure_place == departure)
-    if arrival:
-        statement = statement.where(Trip.arrival_place == arrival)
-    if start_date:
-        statement = statement.where(Trip.start_date == start_date)
-    if end_date:
-        statement = statement.where(Trip.end_date == end_date)
 
-    results = db.exec(statement).all()
-    return results
 
 
 @router.delete("/{trip_id}/leave")

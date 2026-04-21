@@ -33,7 +33,7 @@ def users_list(session=Depends(get_session)) -> List[UserFull]:
 
 
 @router.get("/{user_id}", response_model=UserFull)
-def users_get(user_id: int, session=Depends(get_session)) -> User:
+def users_get(user_id: int, session=Depends(get_session)) -> UserFull:
     return session.get(User, user_id)
 
 
@@ -49,7 +49,7 @@ def users_delete(user_id: int, session=Depends(get_session)):
 
 @router.patch("/{user_id}")
 def users_update(user_id: int,
-                 user: UserDefault,
+                 user: UserUpdate,
                  session=Depends(get_session)) -> UserDefault:
     db_user = session.get(User, user_id)
     if not db_user:
@@ -57,7 +57,7 @@ def users_update(user_id: int,
 
     user_data = user.dict(exclude_unset=True)
     for key, value in user_data.items():
-        setattr(user_data, key, value)
+        setattr(db_user, key, value)
     session.add(db_user)
     session.commit()
     session.refresh(db_user)

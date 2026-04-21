@@ -1,0 +1,14 @@
+site_name: Отчеты по лабораторным
+site_author: Архангельская Елизавета
+site_url: ''
+
+nav:
+  - Home: index.md
+  - Лабораторная работа 1:
+      - Практика 1: lab1/practical_work_1.md
+      - Практика 2: lab1/practical_work_2.md
+      - Прктика 3: lab1/practical_work_3.md
+      - Лабораторная: lab1/index.md
+
+theme:
+  name: readthedocs
