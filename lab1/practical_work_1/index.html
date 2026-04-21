@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Архангельская Елизавета" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Практика 1 - Отчеты по лабораторным</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "\u041f\u0440\u0430\u043a\u0442\u0438\u043a\u0430 1";
+        var mkdocs_page_input_path = "lab1/practical_work_1.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Отчеты по лабораторным
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Лабораторная работа 1</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Практика 1</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#_1">Создание времнных БД по варианту:</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_2">Создание моделей по варианту:</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_3">Эндпоинты:</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../practical_work_2/">Практика 2</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../practical_work_3/">Прктика 3</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../">Лабораторная</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Отчеты по лабораторным</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Лабораторная работа 1</li>
+      <li class="breadcrumb-item active">Практика 1</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="11-fastapi">Практика 1.1. Создание базового приложения на FastAPI</h1>
+<h2 id="_1">Создание времнных БД по варианту:</h2>
+<details>
+  <summary>временные БД в main.py</summary>
+
+
+<pre><code class="language-python">temp_bd_profession = [
+    {
+        &quot;id&quot;: 1,
+        &quot;title&quot;: &quot;Влиятельный человек&quot;,
+        &quot;description&quot;: &quot;Эксперт по всем вопросам&quot;
+    },
+    {
+        &quot;id&quot;: 3,
+        &quot;title&quot;: &quot;Пловчиха&quot;,
+        &quot;description&quot;: &quot;Эксперт по плаванью&quot;
+    }
+
+]
+
+temp_bd = [
+    {
+        &quot;id&quot;: 1,
+        &quot;username&quot;: &quot;director&quot;,
+        &quot;experience&quot;: 2,
+        &quot;birth_date&quot;: datetime.date(2002, 1, 1),
+        &quot;profession&quot;: temp_bd_profession[0],
+        &quot;skills&quot;: [
+            {
+                &quot;id&quot;: 1,
+                &quot;title&quot;: &quot;Скалолаз&quot;,
+                &quot;description&quot;: &quot;&quot;
+            },
+            {
+                &quot;id&quot;: 2,
+                &quot;title&quot;: &quot;Развод костров&quot;,
+                &quot;description&quot;: &quot;&quot;
+            }]
+    },
+    {
+        &quot;id&quot;: 2,
+        &quot;username&quot;: &quot;nastya&quot;,
+        &quot;experience&quot;: 3,
+        &quot;birth_date&quot;: datetime.date(2002, 12, 12),
+        &quot;profession&quot;: temp_bd_profession[0],
+    &quot;skills&quot;: [
+    {
+        &quot;id&quot;: 3,
+        &quot;title&quot;: &quot;Плаванье&quot;, &quot;description&quot;: &quot;Опыт 10 лет&quot;
+    },
+    {
+        &quot;id&quot;: 4,
+        &quot;title&quot;: &quot;Готовка&quot;, &quot;description&quot;: &quot;&quot;
+    }]
+},
+]
+</code></pre>
+
+
+</details>
+
+<h2 id="_2">Создание моделей по варианту:</h2>
+<details>
+  <summary>models.py</summary>
+
+
+<pre><code class="language-python">class Trip(BaseModel):
+    id: int
+    start_date: datetime.date
+    end_date: datetime.date
+    route: str
+    description: str
+
+
+class TripMembers(BaseModel):
+    id: int
+    id_user: int
+    id_trip: int
+
+class Skill(BaseModel):
+    id: int
+    title: str
+    description: Optional[str]
+
+class Profession(BaseModel):
+    id: int
+    title: str
+    description: Optional[str]
+
+
+class User(BaseModel):
+    id: int
+    username: str
+    birth_date: datetime.date
+    experience: int
+    profession: Profession
+    skills: Optional[List[Skill]] = []
+
+class ProfessionCreateResponse(TypedDict):
+    status: int
+    data: Profession
+
+
+class UserCreateResponse(TypedDict):
+    status: int
+    data: User
+
+</code></pre>
+
+</details>
+
+<h2 id="_3">Эндпоинты:</h2>
+<details>
+  <summary>main.py</summary>
+
+
+<pre><code class="language-python">@app.get(&quot;/users_list&quot;)
+def users_list() -&gt; list[User]:
+    return temp_bd
+
+
+@app.get(&quot;/users/{user_id}&quot;)
+def users_get(user_id: int) -&gt; List[User]:
+    return [user for user in temp_bd if user.get(&quot;id&quot;) == user_id]
+
+
+@app.post(&quot;/users&quot;)
+def users_create(user: User) -&gt; UserCreateResponse:
+    temp_bd.append(user.dict())
+    return {&quot;status&quot;: 200, &quot;data&quot;: user}
+
+
+@app.delete(&quot;/users/delete/{user_id}&quot;)
+def users_delete(user_id: int):
+    for i, user in enumerate(temp_bd):
+        if user.get(&quot;id&quot;) == user_id:
+            temp_bd.pop(i)
+            return {&quot;status&quot;: 201, &quot;message&quot;: &quot;deleted&quot;}
+    raise HTTPException(status_code=404, detail=&quot;user not found&quot;)
+
+
+@app.put(&quot;/users/{user_id}&quot;)
+def users_update(user_id: int, user: User) -&gt; User:
+    for u in temp_bd:
+        if u.get(&quot;id&quot;) == user_id:
+            user_to_append = user.dict()
+            temp_bd.remove(u)
+            temp_bd.append(user_to_append)
+            return user
+    raise HTTPException(status_code=404, detail=&quot;user not found&quot;)
+
+
+@app.get(&quot;/professions_list&quot;)
+def profession_list() -&gt; list[Profession]:
+    return temp_bd_profession
+
+
+@app.get(&quot;/professions/{profession_id}&quot;)
+def professions_get(profession_id: int) -&gt; List[Profession]:
+    return [prof for prof in temp_bd_profession if prof.get(&quot;id&quot;) == profession_id]
+
+
+@app.post(&quot;/professions&quot;)
+def professions_create(profession: Profession) -&gt; ProfessionCreateResponse:
+    temp_bd_profession.append(profession.dict())
+    return {&quot;status&quot;: 200, &quot;data&quot;: profession}
+
+
+@app.delete(&quot;/professions/delete/{profession_id}&quot;)
+def professions_delete(profession_id: int):
+    for i, prof in enumerate(temp_bd_profession):
+        if prof.get(&quot;id&quot;) == profession_id:
+            temp_bd_profession.pop(i)
+            return {&quot;status&quot;: 201, &quot;message&quot;: &quot;deleted&quot;}
+    raise HTTPException(status_code=404, detail=&quot;profession not found&quot;)
+
+
+
+@app.put(&quot;/professions/{profession_id}&quot;)
+def warrior_update(profession_id: int, profession: Profession) -&gt; Profession:
+    for p in temp_bd_profession:
+        if p.get(&quot;id&quot;) == profession_id:
+            prof_to_append = profession.dict()
+            temp_bd_profession.remove(p)
+            temp_bd_profession.append(prof_to_append)
+            return profession
+    raise HTTPException(status_code=404, detail=&quot;profession not found&quot;)
+
+</code></pre>
+
+</details>
+
+<p><img alt="" src="../src/1.png" />
+<img alt="" src="../src/2.png" />
+<img alt="" src="../src/3.png" />
+<img alt="" src="../src/4.png" />
+<img alt="" src="../src/5.png" /></p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../.." class="btn btn-neutral float-left" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../practical_work_2/" class="btn btn-neutral float-right" title="Практика 2">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../.." style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../practical_work_2/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
