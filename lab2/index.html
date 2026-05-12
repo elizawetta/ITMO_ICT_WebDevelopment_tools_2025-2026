@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Архангельская Елизавета" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Лабораторная - Отчеты по лабораторным</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "\u041b\u0430\u0431\u043e\u0440\u0430\u0442\u043e\u0440\u043d\u0430\u044f";
+        var mkdocs_page_input_path = "lab2/index.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Отчеты по лабораторным
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Лабораторная работа 1</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab1/practical_work_1/">Практика 1</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab1/practical_work_2/">Практика 2</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab1/practical_work_3/">Прктика 3</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab1/">Лабораторная</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Лабораторная работа 2</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Лабораторная</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#1-threading-multiprocessing-async-python">Задание 1. Различия между threading, multiprocessing и async в Python</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#_1">Результаты выполнения:</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#2-">Задание 2. Параллельный парсинг веб-страниц с сохранением в базу данных</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#_2">Результаты выполнения:</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Отчеты по лабораторным</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Лабораторная работа 2</li>
+      <li class="breadcrumb-item active">Лабораторная</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="2">Лабораторная работа 2. Потоки. Процессы. Асинхронность.</h1>
+<p><strong>Цель работы:</strong> понять отличия потоками и процессами и понять, что такое ассинхронность в Python.</p>
+<h2 id="1-threading-multiprocessing-async-python">Задание 1. Различия между threading, multiprocessing и async в Python</h2>
+<p><strong>Задача:</strong> Напишите три различных программы на Python, использующие каждый из подходов: threading, multiprocessing и async. Каждая программа должна решать считать сумму всех чисел от 1 до 10000000000000. Разделите вычисления на несколько параллельных задач для ускорения выполнения.</p>
+<details>
+  <summary>threading</summary>
+
+
+<pre><code class="language-python">import threading
+import time
+
+N = 1000000000
+# N = 10000000000000
+NUM_THREADS = 4
+
+results = [0] * NUM_THREADS
+
+
+def calculate_sum(start, end, index):
+    local_sum = 0
+
+    for i in range(start, end + 1):
+        local_sum += i
+
+    results[index] = local_sum
+
+
+if __name__ == &quot;__main__&quot;:
+    chunk_size = N // NUM_THREADS
+    threads = []
+    start_time = time.time()
+
+    for i in range(NUM_THREADS):
+        start_num = i * chunk_size + 1
+
+        if i == NUM_THREADS - 1:
+            end_num = N
+        else:
+            end_num = (i + 1) * chunk_size
+
+        thread = threading.Thread(
+            target=calculate_sum,
+            args=(start_num, end_num, i)
+        )
+
+        threads.append(thread)
+        thread.start()
+
+    for thread in threads:
+        thread.join()
+
+    total_sum = sum(results)
+
+    end_time = time.time()
+
+    print(&quot;Threading:&quot;)
+    print(&quot;Sum =&quot;, total_sum)
+    print(&quot;Time =&quot;, end_time - start_time)
+</code></pre>
+
+
+</details>
+
+<details>
+  <summary>multiprocessing</summary>
+
+
+<pre><code class="language-python">import multiprocessing
+import time
+
+N = 1_000_000_000
+# N = 10000000000000
+NUM_PROCESSES = 4
+
+
+def calculate_sum(start, end):
+    local_sum = 0
+
+    for i in range(start, end + 1):
+        local_sum += i
+
+    return local_sum
+
+
+if __name__ == &quot;__main__&quot;:
+
+    chunk_size = N // NUM_PROCESSES
+    tasks = []
+
+    for i in range(NUM_PROCESSES):
+
+        start_num = i * chunk_size + 1
+
+        if i == NUM_PROCESSES - 1:
+            end_num = N
+        else:
+            end_num = (i + 1) * chunk_size
+
+        tasks.append((start_num, end_num))
+    print('start')
+
+    start_time = time.time()
+
+    with multiprocessing.Pool(NUM_PROCESSES) as pool:
+        results = pool.starmap(calculate_sum, tasks)
+
+    total_sum = sum(results)
+
+    end_time = time.time()
+
+    print(&quot;Multiprocessing:&quot;)
+    print(&quot;Sum =&quot;, total_sum)
+    print(&quot;Time =&quot;, end_time - start_time)
+
+</code></pre>
+
+
+</details>
+
+<details>
+  <summary>async</summary>
+
+
+<pre><code class="language-python">import asyncio
+import time
+
+N = 1_000_000_000
+# N = 10000000000000
+NUM_TASKS = 4
+
+
+async def calculate_sum(start, end):
+    local_sum = 0
+    for i in range(start, end + 1):
+        local_sum += i
+    return local_sum    
+
+
+async def main():
+
+    chunk_size = N // NUM_TASKS
+    tasks = []
+
+    for i in range(NUM_TASKS):
+
+        start_num = i * chunk_size + 1
+
+        if i == NUM_TASKS - 1:
+            end_num = N
+        else:
+            end_num = (i + 1) * chunk_size
+
+        tasks.append(
+            asyncio.create_task(
+                calculate_sum(start_num, end_num)
+            )
+        )
+
+    results = await asyncio.gather(*tasks)
+
+    return sum(results)
+
+
+start_time = time.time()
+
+total_sum = asyncio.run(main())
+
+end_time = time.time()
+
+print(&quot;Asyncio:&quot;)
+print(&quot;Sum =&quot;, total_sum)
+print(&quot;Time =&quot;, end_time - start_time)
+</code></pre>
+
+
+</details>
+
+<h3 id="_1">Результаты выполнения:</h3>
+<p><img alt="" src="src/1.png" /></p>
+<table>
+  <tr>
+    <th>Подход</th>
+    <th>Время</th>
+  </tr>
+  <tr>
+    <td>threading</td>
+    <td>21.82 сек</td>
+  </tr>
+  <tr>
+    <td>multiprocessing</td>
+    <td>9.69 сек</td>
+  </tr>
+  <tr>
+    <td>asyncio</td>
+    <td>23.66 сек</td>
+  </tr>
+</table>
+
+<p>Для CPU-bound задачи лучший результат показал multiprocessing (9.69 сек), поскольку он использует несколько независимых процессов и позволяет выполнять вычисления параллельно на разных ядрах процессора. threading оказался значительно медленнее (21.82 сек) из-за GIL, который не позволяет нескольким потокам одновременно выполнять Python bytecode в CPU-bound задачах. asyncio показал результат 23.66 сек, так как асинхронность эффективна для I/O-bound операций, а не для вычислений.</p>
+<h2 id="2-">Задание 2. Параллельный парсинг веб-страниц с сохранением в базу данных</h2>
+<p><strong>Задача:</strong> Напишите программу на Python для параллельного парсинга нескольких веб-страниц с сохранением данных в базу данных с использованием подходов threading, multiprocessing и async. Каждая программа должна парсить информацию с нескольких веб-сайтов, сохранять их в базу данных.</p>
+<p>Для парсинга использовались URLs:</p>
+<details>
+    <summary>URLS</summary>
+
+
+<pre><code class="language-python">URLS = [
+    &quot;https://example.com&quot;,
+    &quot;https://python.org&quot;,
+    &quot;https://github.com&quot;,
+    &quot;https://stackoverflow.com&quot;,
+    &quot;https://wikipedia.org&quot;,
+    &quot;https://openai.com&quot;,
+    &quot;https://reddit.com&quot;,
+    &quot;https://news.ycombinator.com&quot;,
+    &quot;https://docs.python.org&quot;,
+    &quot;https://pypi.org&quot;,
+    &quot;https://fastapi.tiangolo.com&quot;,
+    &quot;https://sqlmodel.tiangolo.com&quot;,
+    &quot;https://realpython.com&quot;,
+    &quot;https://www.bbc.com&quot;,
+    &quot;https://www.cnn.com&quot;,
+    &quot;https://www.nytimes.com&quot;,
+    &quot;https://www.mozilla.org&quot;,
+    &quot;https://www.apple.com&quot;,
+    &quot;https://www.microsoft.com&quot;,
+    &quot;https://www.amazon.com&quot;,
+]
+</code></pre>
+
+
+</details>
+
+<p>Данные записываются в таблицу Skills:</p>
+<pre><code class="language-python">class Skill(SQLModel, table=True):
+    id: int = Field(default=None, primary_key=True)
+    title: str
+    description: Optional[str]
+</code></pre>
+<p>Подключение к БД для threading и multiprocessing:</p>
+<pre><code class="language-python">DATABASE_URL = f&quot;postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}&quot;
+engine = create_engine(DATABASE_URL)
+</code></pre>
+<p>Подключение к БД для async:</p>
+<pre><code class="language-python">DATABASE_URL = f&quot;postgresql+asyncpg://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}&quot;
+engine = create_async_engine(DATABASE_URL, echo=False)
+AsyncSessionLocal = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
+</code></pre>
+<details>
+  <summary>threading</summary>
+
+
+<pre><code class="language-python">def parse_and_save(url):
+    try:
+        response = requests.get(url, timeout=10)
+
+        soup = BeautifulSoup(response.text, &quot;html.parser&quot;)
+
+        title = soup.title.string.strip()
+
+        skill = Skill(
+            title=title + ' [threading]',
+            description=f&quot;Parsed from {url}&quot;
+        )
+
+        with Session(engine) as session:
+            session.add(skill)
+            session.commit()
+
+
+    except Exception as e:
+        print(f&quot;[ERROR] {url}: {e}&quot;)
+
+
+threads = []
+start_time = time.time()
+
+
+for url in URLS:
+    thread = threading.Thread(target=parse_and_save, args=(url,))
+    threads.append(thread)
+    thread.start()
+
+for thread in threads:
+    thread.join()
+
+</code></pre>
+
+</details>
+
+<details>
+  <summary>multiprocessing</summary>
+
+
+<pre><code class="language-python">def parse_and_save(url):
+    try:
+        response = requests.get(url, timeout=10)
+        soup = BeautifulSoup(response.text, &quot;html.parser&quot;)
+        title = soup.title.string.strip()
+        skill = Skill(
+            title=title + ' [multiprocessing]',
+            description=f&quot;Parsed from {url}&quot;
+        )
+        with Session(engine) as session:
+            session.add(skill)
+            session.commit()
+
+    except Exception as e:
+        print(f&quot;[ERROR] {url}: {e}&quot;)
+
+
+
+if __name__ == &quot;__main__&quot;:
+    start_time = time.time()
+
+    with multiprocessing.Pool(4) as pool:
+        pool.map(parse_and_save, URLS)
+
+</code></pre>
+
+</details>
+
+<details>
+  <summary>async</summary>
+
+
+<pre><code class="language-python">async def parse_and_save(client, url):
+    try:
+        async with client.get(url) as response:
+            html = await response.text()
+        soup = BeautifulSoup(html, &quot;html.parser&quot;)
+        title = soup.title.string.strip()
+        skill = Skill(
+            title=title + &quot; [async]&quot;,
+            description=f&quot;Parsed from {url}&quot;
+        )
+        async with AsyncSessionLocal() as session:
+            session.add(skill)
+            await session.commit()
+
+
+    except Exception as e:
+        print(f&quot;[ERROR] {url}: {e}&quot;)
+
+
+async def main():
+    async with aiohttp.ClientSession() as client:
+        tasks = []
+        for url in URLS:
+            tasks.append(
+                asyncio.create_task(
+                    parse_and_save(client, url)
+                )
+            )
+        await asyncio.gather(*tasks)
+
+
+start_time = time.time()
+asyncio.run(main())
+end_time = time.time()
+
+</code></pre>
+
+</details>
+
+<h3 id="_2">Результаты выполнения:</h3>
+<p><img alt="" src="src/2.png" />
+<img alt="" src="src/3.png" />
+<img alt="" src="src/4.png" /></p>
+<table>
+  <tr>
+    <th>Подход</th>
+    <th>Время</th>
+  </tr>
+  <tr>
+    <td>threading</td>
+    <td>2.46 сек</td>
+  </tr>
+  <tr>
+    <td>multiprocessing</td>
+    <td>3.96 сек</td>
+  </tr>
+  <tr>
+    <td>asyncio</td>
+    <td>1.62 сек</td>
+  </tr>
+</table>
+
+<p>1) asyncio - самый быстрый, потому что задача I/O-bound: ожидание HTTP-запросов и работы базы данных. Asyncio эффективно переключается между задачами без создания потоков и процессов.</p>
+<p>2) threading — потоки хорошо подходят для сетевых операций, а во время I/O GIL не мешает работе</p>
+<p>3) multiprocessing — самый медленный, потому что для I/O-bound задач создание отдельных процессов почти не приносит пользы.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../lab1/" class="btn btn-neutral float-left" title="Лабораторная"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../lab1/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
