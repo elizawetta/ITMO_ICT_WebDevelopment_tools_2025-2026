@@ -9,6 +9,8 @@ nav:
       - Практика 2: lab1/practical_work_2.md
       - Прктика 3: lab1/practical_work_3.md
       - Лабораторная: lab1/index.md
+  - Лабораторная работа 2: 
+      - Лабораторная: lab2/index.md 
 
 theme:
   name: readthedocs
