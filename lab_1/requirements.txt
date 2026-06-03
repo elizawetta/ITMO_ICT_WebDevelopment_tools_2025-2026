@@ -3,8 +3,15 @@ sqlmodel
 psycopg2-binary
 alembic
 python-dotenv
-
 passlib==1.7.4
 bcrypt==4.1.2
-
 python-jose
+uvicorn
+aiohttp
+beautifulsoup4
+sqlalchemy
+asyncpg
+python-multipart
+httpx
+celery
+redis

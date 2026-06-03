@@ -11,6 +11,8 @@ nav:
       - Лабораторная: lab1/index.md
   - Лабораторная работа 2: 
       - Лабораторная: lab2/index.md 
+  - Лабораторная работа 3: 
+      - Лабораторная: lab3/index.md 
 
 theme:
   name: readthedocs

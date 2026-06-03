@@ -62,3 +62,8 @@ class UserUpdate(SQLModel):
     experience: Optional[int] = None
     profession_id: Optional[int] = None
     project_preferences: Optional[str] = None
+
+class ParseRequest(pydantic.BaseModel):
+    urls: List[str]
+
+
