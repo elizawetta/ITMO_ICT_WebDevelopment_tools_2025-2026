@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Архангельская Елизавета" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Лабораторная - Отчеты по лабораторным</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "\u041b\u0430\u0431\u043e\u0440\u0430\u0442\u043e\u0440\u043d\u0430\u044f";
+        var mkdocs_page_input_path = "lab3/index.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Отчеты по лабораторным
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Лабораторная работа 1</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab1/practical_work_1/">Практика 1</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab1/practical_work_2/">Практика 2</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab1/practical_work_3/">Прктика 3</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab1/">Лабораторная</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Лабораторная работа 2</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../lab2/">Лабораторная</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Лабораторная работа 3</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Лабораторная</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#1-fastapi-docker">Подзадача 1: Упаковка FastAPI приложения, базы данных и парсера данных в Docker</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#2-fastapi">Подзадача 2: Вызов парсера из FastAPI</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#3-celery-redis">Подзадача 3: Celery и Redis</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#4-celery">Подзадача 4: Настройка переодических задач с Celery</a>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Отчеты по лабораторным</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Лабораторная работа 3</li>
+      <li class="breadcrumb-item active">Лабораторная</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="3-fastapi-docker">Лабораторная работа 3. Упаковка FastAPI приложения в Docker, Работа с источниками данных и Очереди</h1>
+<p><strong>Цель работы:</strong> Научиться упаковывать FastAPI приложение в Docker, интегрировать парсер данных с базой данных и вызывать парсер через API и очередь.</p>
+<h2 id="1-fastapi-docker">Подзадача 1: Упаковка FastAPI приложения, базы данных и парсера данных в Docker</h2>
+<details>
+  <summary>parser_app.py</summary>
+
+
+<pre><code class="language-python">import asyncio
+import time
+import aiohttp
+from bs4 import BeautifulSoup
+from fastapi import FastAPI
+from sqlmodel import SQLModel
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.orm import sessionmaker
+from models import Skill
+from schemas import ParseRequest
+from dotenv import load_dotenv
+import os
+
+
+load_dotenv()
+DB_USER = os.getenv('DB_USER')
+DB_PASS = os.getenv('DB_PASS')
+DB_HOST = os.getenv('DB_HOST')
+DB_NAME = os.getenv('DB_NAME')
+
+DATABASE_URL = (
+    f&quot;postgresql+asyncpg://{DB_USER}:{DB_PASS}&quot;
+    f&quot;@{DB_HOST}:5432/{DB_NAME}&quot;
+)
+
+
+
+engine = create_async_engine(DATABASE_URL)
+
+AsyncSessionLocal = sessionmaker(
+    engine,
+    class_=AsyncSession,
+    expire_on_commit=False
+)
+
+app = FastAPI(title=&quot;Parser Microservice&quot;)
+
+semaphore = asyncio.Semaphore(5)
+
+async def parse_and_save(client, url: str):
+    async with semaphore:
+        try:
+            async with client.get(url) as response:
+                html = await response.text()
+
+            soup = BeautifulSoup(html, &quot;html.parser&quot;)
+            title = soup.title.string.strip() if soup.title else &quot;No title&quot;
+            skill = Skill(
+                title=title + &quot; [async]&quot;,
+                description=f&quot;Parsed from {url}&quot;
+            )
+
+            async with AsyncSessionLocal() as session:
+                session.add(skill)
+                await session.commit()
+
+            return { &quot;url&quot;: url, &quot;title&quot;: title, &quot;status&quot;: &quot;saved&quot;}
+
+        except Exception as e:
+            return {&quot;url&quot;: url, &quot;status&quot;: &quot;error&quot;, &quot;error&quot;: str(e)}
+
+
+
+@app.post(&quot;/parse&quot;)
+async def parse_urls(data: ParseRequest):
+    start_time = time.time()
+    timeout = aiohttp.ClientTimeout(total=10)
+
+    async with aiohttp.ClientSession(timeout=timeout) as client:
+        tasks = [asyncio.create_task(parse_and_save(client, url)) for url in data.urls]
+        results = await asyncio.gather(*tasks)
+    execution_time = round(time.time() - start_time, 2)
+    return {
+        &quot;status&quot;: &quot;success&quot;,
+        &quot;parsed&quot;: len(results),
+        &quot;execution_time&quot;: execution_time,
+        &quot;results&quot;: results
+        }
+
+
+@app.on_event(&quot;startup&quot;)
+async def on_startup():
+    pass
+</code></pre>
+
+
+</details>
+
+<details>
+  <summary>Dockerfile</summary>
+
+
+<pre><code class="language-Dockerfile">FROM python:3.12-slim
+
+WORKDIR /app
+
+RUN apt-get update &amp;&amp; apt-get install -y --no-install-recommends \
+    build-essential \
+    &amp;&amp; rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+</code></pre>
+
+
+</details>
+
+<details>
+  <summary>docker-compose.yml</summary>
+
+
+<pre><code class="language-yaml">version: '3.9'
+
+services:
+  # Сервис базы данных
+  db:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - &quot;5432:5432&quot;
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - .env
+    healthcheck:
+      test: [&quot;CMD-SHELL&quot;, &quot;pg_isready -U ${DB_USER} -d ${DB_NAME}&quot;]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+
+  main_app:
+    build: .
+    restart: always
+    command: uvicorn main:app --host 0.0.0.0 --port 8000
+    ports:
+      - &quot;8000:8000&quot;
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+
+  parser_service:
+    build: .
+    restart: always
+    command: uvicorn parser_app:app --host 0.0.0.0 --port 8001
+    ports:
+      - &quot;8001:8001&quot;
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+</code></pre>
+
+
+</details>
+
+<p>Докер успешно запущен, оба сервиса работают:</p>
+<p><img alt="" src="src/1.png" />
+<img alt="" src="src/2.png" />
+<img alt="" src="src/3.png" /></p>
+<h2 id="2-fastapi">Подзадача 2: Вызов парсера из FastAPI</h2>
+<p>Создадим эндпоинт для вызова парсера в основном приложении <code>main.py</code></p>
+<pre><code class="language-python">@app.post(&quot;/call-parser&quot;)
+async def call_parser_endpoint(data: ParseRequest):
+    &quot;&quot;&quot;
+    Эндпоинт, который принимает список URL и пересылает их микросервису-парсеру
+    &quot;&quot;&quot;
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.post(
+                PARSER_SERVICE_URL,
+                json={&quot;urls&quot;: data.urls},
+                timeout=10.0
+            )
+
+            response.raise_for_status()
+
+            return response.json()
+
+        except httpx.ConnectError:
+            raise HTTPException(status_code=503, detail=&quot;Parser service is unavailable&quot;)
+        except httpx.HTTPStatusError as e:
+            raise HTTPException(status_code=e.response.status_code, detail=e.response.text)
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+</code></pre>
+<p>Вызов парсера из основного приложения: </p>
+<p><img alt="" src="src/4.png" /></p>
+<h2 id="3-celery-redis">Подзадача 3: Celery и Redis</h2>
+<details>
+  <summary>celery_app.py</summary>
+
+
+<pre><code class="language-python">import os
+import time
+import asyncio
+from celery import Celery
+import httpx
+
+
+REDIS_URL = os.getenv(&quot;REDIS_URL&quot;, &quot;redis://redis:6379/0&quot;)
+
+celery_app = Celery(
+    &quot;worker&quot;,
+    broker=REDIS_URL,
+    backend=REDIS_URL
+)
+
+
+celery_app.conf.task_serializer = 'json'
+celery_app.conf.result_serializer = 'json'
+celery_app.conf.accept_content = ['json']
+celery_app.conf.result_expires = 3600 
+
+@celery_app.task(name=&quot;parse_urls_task&quot;)
+def parse_urls_task(urls: list):
+    PARSER_URL = &quot;http://parser_service:8001/parse&quot;
+
+    with httpx.Client(timeout=60.0) as client:
+        response = client.post(PARSER_URL, json={&quot;urls&quot;: urls})
+        return response.json()
+
+</code></pre>
+
+
+</details>
+
+<p>В <code>main.py</code> добавлены два новых эндпоинта: первый ставит задачу в очередь и сразу возвращает ID, второй показывает статус и результат по задаче </p>
+<details>
+  <summary>main.py</summary>
+
+
+<pre><code class="language-python">@app.post(&quot;/call-parser-async&quot;)
+async def call_parser_async(data: ParseRequest):
+    task = parse_urls_task.delay(data.urls)
+
+    return {
+        &quot;status&quot;: &quot;Task dispatched&quot;,
+        &quot;task_id&quot;: task.id,
+        &quot;message&quot;: &quot;Parsing has started in the background&quot;
+    }
+
+
+@app.get(&quot;/task-status/{task_id}&quot;)
+async def get_task_status(task_id: str):
+    task_result = AsyncResult(task_id, app=celery_app)
+
+    result = {
+        &quot;task_id&quot;: task_id,
+        &quot;status&quot;: task_result.status,
+    }
+
+    if task_result.status == 'SUCCESS':
+        result[&quot;result&quot;] = task_result.result # То, что вернула функция parse_urls_task
+    elif task_result.status == 'FAILURE':
+        result[&quot;error&quot;] = str(task_result.info)
+
+    return result
+
+</code></pre>
+
+
+</details>
+
+<p>И обновим <code>docker-compose.yml</code>: добавим Redis и сам процесс воркера (Celery).</p>
+<p><img alt="" src="src/5.png" />
+<img alt="" src="src/6.png" /></p>
+<h2 id="4-celery">Подзадача 4: Настройка переодических задач с Celery</h2>
+<p>Добавим расписание (beat schedule) в конфигурацию Celery. (<code>celery_app.py</code>)</p>
+<pre><code class="language-python">
+celery_app.conf.beat_schedule = {
+    'parse-every-hour': {
+        'task': 'parse_urls_task', 
+        'schedule': 3600.0, 
+        'args': (['https://python.org', 'https://fastapi.tiangolo.com'],)
+    },
+}
+
+celery_app.conf.timezone = 'UTC'
+</code></pre>
+<p>Для периодических задач нужно запустить отдельный процесс celery beat. Он не выполняет сами задачи, он только дает воркеру их начать.</p>
+<pre><code class="language-yaml">celery_beat:
+    build: .
+    command: celery -A celery_app beat --loglevel=info
+    depends_on:
+      redis:
+        condition: service_started
+    env_file:
+      - .env
+</code></pre>
+<p><img alt="" src="src/7.png" /></p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../lab2/" class="btn btn-neutral float-left" title="Лабораторная"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../lab2/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
